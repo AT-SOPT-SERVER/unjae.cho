@@ -82,7 +82,7 @@ public class Main {
                     }
                     break;
 
-                /*case "6":
+                case "6":
                     System.out.println("\n🔎 [게시글 검색]");
                     System.out.print("검색할 키워드를 입력해주세요: ");
                     String keyword = scanner.nextLine();
@@ -96,7 +96,7 @@ public class Main {
                         }
                     }
                     break;
-*/
+
                 case "0":
                     System.out.println("\n👋 프로그램을 종료합니다. 감사합니다!");
                     return;

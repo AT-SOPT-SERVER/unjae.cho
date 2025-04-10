@@ -33,7 +33,13 @@ public class PostService {
         return postRepository.delete(id);
     }
     public boolean updatePostTitle(int upDateid, String newTitle) {
-        return postRepository.update(upDateid,newTitle);
+        if (postRepository.checkDuplicate(newTitle)) {
+            return postRepository.update(upDateid,newTitle);
+        }
+        return false;
+    }
+    public List<Post> searchPostsByKeyword(String keyword){
+        return postRepository.search(keyword);
     }
 } //예외 처리 & 객체 생성?
 

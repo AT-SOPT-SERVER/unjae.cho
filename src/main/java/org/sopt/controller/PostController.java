@@ -20,5 +20,5 @@ public class PostController {
         return postService.deletePostById(id);
     }
     public boolean updatePostTitle(int upDateid, String newTitle) {return postService.updatePostTitle(upDateid, newTitle); }
-
+    public List<Post> searchPostsByKeyword(String keyword){return postService.searchPostsByKeyword(keyword);}
 }
