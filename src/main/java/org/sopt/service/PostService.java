@@ -15,13 +15,12 @@ public class PostService {
     public boolean createPost(final String title) {
         if (title.isEmpty() || title.length() > 30 ) {
             return false;
-        }
-        else{
+        } else if (postRepository.checkDuplicate(title)) {
             Post post = new Post(postId++,title);     //객체 생성은 Service의 책임
             postRepository.save(post); //Post 생성 유효성 검사도 Service! => Post 에서 만들어도 되나..
             return true;
         }
-
+        else return false;
     }
 
     public List<Post> getAllPosts() {

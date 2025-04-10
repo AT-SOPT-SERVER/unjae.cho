@@ -43,5 +43,14 @@ public class PostRepository {
 
         return false;
     }
+    public boolean checkDuplicate(String title) {
+        for (Post post : postList.values()) {
+            if (post.getTitle().equals(title)) {
+                return false;
+            }
+
+        }
+        return true;
+    }
 
 }
