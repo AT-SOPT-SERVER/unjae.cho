@@ -9,52 +9,58 @@ import java.util.Map;
 
 public class PostRepository {
 
-    Map<Integer, Post> postList = new HashMap<>();
+    private int postId = 0;
+    static Map<Integer, Post> postMap = new HashMap<>();
 
-
-    public void save(Post post) {
-        postList.put(post.getId(), post);
+    public boolean save(String title) {
+        Post post = new Post(postId++,title);     //객체 생성은 Service의 책임
+        postMap.put(post.getId(), post);
+        return true;
     }
 
     public List<Post> findAll() {
-        return new ArrayList<>(postList.values());
+        return new ArrayList<>(postMap.values());
     }
+
     public Post findPostById(int id) {
-        if (postList.containsKey(id)) {
-                return postList.get(id);
+        if (postMap.containsKey(id)) {
+                return postMap.get(id);
             }
 
         return null;
     }
+
     public boolean delete(int id) {
-        if (postList.containsKey(id)) {
-                postList.remove(id);
+        if (postMap.containsKey(id)) {
+                postMap.remove(id);
                 return true;
             }
 
         return false;
     }
-    public boolean update(int id, String newTitle) {
-        if (postList.containsKey(id)) {
-            postList.get(id).updateTitle(newTitle);
+
+    public boolean update(int updateId, String newTitle) {
+        if (postMap.containsKey(updateId)) {
+            postMap.get(updateId).updateTitle(newTitle);
 
             return true;
             }
 
         return false;
     }
-    public boolean checkDuplicate(String title) {
-        for (Post post : postList.values()) {
+
+    public boolean checkDuplicate(String title) {   //중복 시 true !!
+        for (Post post : postMap.values()) {
             if (post.getTitle().equals(title)) {
-                return false;
+                return true;
             }
 
         }
-        return true;
+        return false;
     }
     public List<Post> search(String keyword) {
         List <Post> posts = new ArrayList<>();
-        for (Post post : postList.values()) {
+        for (Post post : postMap.values()) {
             if (post.getTitle().contains(keyword)) {
                 posts.add(post);
             }

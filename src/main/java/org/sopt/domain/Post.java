@@ -14,10 +14,13 @@ public class Post {
     public int getId(){
         return this.id;
     }
+
     public String getTitle(){
         return this.title;
     }
+
     public void updateTitle(String newTitle){     //Repository update를 위한 메서드
         this.title = newTitle;
     }
+
 }
