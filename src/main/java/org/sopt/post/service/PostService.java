@@ -4,8 +4,10 @@ import jakarta.transaction.Transactional;
 import org.sopt.post.domain.Post;
 import org.sopt.post.dto.PostRequest;
 import org.sopt.post.repository.PostRepository;
-import org.sopt.post.util.PostValidator;
+import org.sopt.global.utils.PostValidator;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,13 +20,11 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
+    @Transactional
     public void createPost(PostRequest postRequest) {
-        if(PostValidator.validatePost(postRequest.title())){
+        if(PostValidator.validatePost(postRequest.title())) {
             Post post = new Post(postRequest.title());
             postRepository.save(post);
-        }
-        else {
-            throw new IllegalArgumentException("적절하지 않은 게시글");
         }
     }
 
@@ -34,7 +34,7 @@ public class PostService {
 
     public Post getPostById(Long id) {
         return postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
     }
 
     public void deletePost(Long id) {
@@ -45,11 +45,17 @@ public class PostService {
     public void updatePost(Long id,PostRequest postRequest){
         if(PostValidator.validatePost(postRequest.title())){
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
+
         post.setTitle(postRequest.title());
         }
-        else {
-            throw new IllegalArgumentException("적절하지 않은 게시글");
-        }
     }
+
+    public List<Post> getPostsByTitle(String title) {
+        return postRepository.findByTitleContaining(title);
+    }
+
+
+
+
 }

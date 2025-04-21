@@ -3,6 +3,7 @@ package org.sopt.post.controller;
 import org.sopt.post.domain.Post;
 import org.sopt.post.dto.PostRequest;
 import org.sopt.post.service.PostService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +43,9 @@ public class PostController {
         postService.updatePost(id, postRequest);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> getPostsByTitle(@RequestParam String keyword) {
+        return ResponseEntity.ok(postService.getPostsByTitle(keyword));
+    }
 
 }
