@@ -3,6 +3,7 @@ package org.sopt.post.service;
 import jakarta.transaction.Transactional;
 import org.sopt.post.domain.Post;
 import org.sopt.post.dto.PostRequest;
+import org.sopt.post.dto.PostResponse;
 import org.sopt.post.repository.PostRepository;
 import org.sopt.global.utils.PostValidator;
 import org.springframework.http.HttpStatus;
@@ -21,23 +22,27 @@ public class PostService {
     }
 
     @Transactional
-    public Post createPost(PostRequest postRequest) {
+    public PostResponse createPost(PostRequest postRequest) {
         if(PostValidator.validatePost(postRequest.title())) {
             Post post = new Post(postRequest.title());
             postRepository.save(post);
 
-            return post;
+            return new PostResponse(post);
         }
         return null;
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostResponse> getAllPosts() {
+        return postRepository.findAll().stream()
+                .map(post -> new PostResponse(post.getId(), post.getTitle()))
+                .toList();
     }
 
-    public Post getPostById(Long id) {
-        return postRepository.findById(id)
+    public PostResponse getPostById(Long id) {
+        Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."));
+        return new PostResponse(post.getId(), post.getTitle());
+
     }
 
     public void deletePost(Long id) {
@@ -45,18 +50,18 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long id,PostRequest postRequest){
+    public PostResponse updatePost(Long id,PostRequest postRequest){
         if(PostValidator.validatePost(postRequest.title())) {
             Post post = postRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."));
             post.setTitle(postRequest.title());
 
-            return post;
+            return new PostResponse(postRepository.save(post));
         }
         return null;
     }
 
-    public List<Post> getPostsByTitle(String title) {
+    public List<PostResponse> getPostsByTitle(String title) {
         return postRepository.findByTitleContaining(title);
     }
 

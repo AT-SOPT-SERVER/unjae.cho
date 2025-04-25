@@ -11,6 +11,10 @@ public class PostResponse {
         this.id = post.getId();
         this.title = post.getTitle();
     }
+    public PostResponse(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
     public Long getId() {
         return id;
     }

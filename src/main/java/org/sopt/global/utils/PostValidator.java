@@ -1,6 +1,7 @@
 package org.sopt.global.utils;
 
 
+import org.sopt.global.exception.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -12,10 +13,10 @@ public class PostValidator {
 
     public static boolean validatePost(String title) {
         if (Objects.equals(title, "")){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"게시글이 비어있으면 안됩니다.");
+            throw new ResponseStatusException(Error.TITLE_EMPTY.getStatus(),Error.TITLE_EMPTY.getMessage());
 
         } else if (title.length() > MAX_TITLE) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"게시글은 30자 이하여야 합니다.");
+            throw new ResponseStatusException(Error.TOO_LONG_TITLE.getStatus(),Error.TOO_LONG_TITLE.getMessage());
 
         } else{
             return true;
