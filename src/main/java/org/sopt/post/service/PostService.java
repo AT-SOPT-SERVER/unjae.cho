@@ -21,11 +21,14 @@ public class PostService {
     }
 
     @Transactional
-    public void createPost(PostRequest postRequest) {
+    public Post createPost(PostRequest postRequest) {
         if(PostValidator.validatePost(postRequest.title())) {
             Post post = new Post(postRequest.title());
             postRepository.save(post);
+
+            return post;
         }
+        return null;
     }
 
     public List<Post> getAllPosts() {
@@ -34,7 +37,7 @@ public class PostService {
 
     public Post getPostById(Long id) {
         return postRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."));
     }
 
     public void deletePost(Long id) {
@@ -42,13 +45,15 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(Long id,PostRequest postRequest){
-        if(PostValidator.validatePost(postRequest.title())){
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
+    public Post updatePost(Long id,PostRequest postRequest){
+        if(PostValidator.validatePost(postRequest.title())) {
+            Post post = postRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."));
+            post.setTitle(postRequest.title());
 
-        post.setTitle(postRequest.title());
+            return post;
         }
+        return null;
     }
 
     public List<Post> getPostsByTitle(String title) {
