@@ -27,7 +27,7 @@ public class PostService {
             PostRequestDto postRequest
     ) {
         PostValidator.validatePost(postRequest.title());
-        Post post = new Post(postRequest.title());
+        Post post = new Post(postRequest.title(), postRequest.content());
         postRepository.save(post);
         return new PostResponseDto(post);
     }
@@ -44,7 +44,7 @@ public class PostService {
     ) {
         Post post = postRepository.findById(id)
                 .orElseThrow(Error::BlankTitle);
-        return new PostResponseDto(post.getId(), post.getTitle());
+        return new PostResponseDto(post.getId(), post.getTitle(), post.getContent());
 
     }
 
