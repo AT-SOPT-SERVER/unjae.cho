@@ -32,6 +32,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getAllPosts(
+        //    @RequestParam String keyword
     ) {
         List<PostResponseDto> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
@@ -61,13 +62,4 @@ public class PostController {
         PostResponseDto post = postService.updatePost(id, postRequestDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.update(post));
     }
-
-    @GetMapping("/search")
-    public ResponseEntity<?> getPostsByTitle(
-            @RequestParam String keyword
-    ) {
-        List<PostResponseDto> posts = postService.getPostsByTitle(keyword);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
-    }
-
 }

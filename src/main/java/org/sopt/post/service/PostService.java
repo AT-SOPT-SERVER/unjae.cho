@@ -35,7 +35,7 @@ public class PostService {
     public List<PostResponseDto> getAllPosts(
     ) {
         return postRepository.findAll().stream()
-                .map(post -> new PostResponseDto(post.getId(), post.getTitle()))
+                .map(PostResponseDto::new)
                 .toList();
     }
 
