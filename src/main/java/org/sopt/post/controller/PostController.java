@@ -1,9 +1,8 @@
 package org.sopt.post.controller;
 
-import org.sopt.post.domain.Post;
-import org.sopt.post.dto.ApiResponse;
-import org.sopt.post.dto.PostRequest;
-import org.sopt.post.dto.PostResponse;
+import org.sopt.global.dto.ApiResponse;
+import org.sopt.post.dto.PostRequestDto;
+import org.sopt.post.dto.PostResponseDto;
 import org.sopt.post.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,56 +16,58 @@ public class PostController {
 
     private final PostService postService;
 
-    public PostController(PostService postService) {
+    public PostController(
+            PostService postService
+    ) {
         this.postService = postService;
     }
 
     @PostMapping
-    public ResponseEntity<?> createPost(@RequestBody final PostRequest postRequest) {
-        PostResponse post = postService.createPost(postRequest);
-        ApiResponse<PostResponse> response = new ApiResponse<>("201", "게시글 생성", post);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<ApiResponse<PostResponseDto>> createPost(
+            @RequestBody final PostRequestDto postRequestDto
+    ) {
+        PostResponseDto post = postService.createPost(postRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.create(post));
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllPosts() {
-        List<PostResponse> posts = postService.getAllPosts();
-        ApiResponse<List<PostResponse>> response = new ApiResponse<>("200", "전체 게시글 조회", posts);
-
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<ApiResponse<List<PostResponseDto>>> getAllPosts(
+    ) {
+        List<PostResponseDto> posts = postService.getAllPosts();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getPostById(@PathVariable final Long id) {
-        PostResponse post = postService.getPostById(id);
-        ApiResponse<PostResponse> response = new ApiResponse<>("200", "게시글 조회", post);
-
-        return ResponseEntity.ok().body(response);
+    @GetMapping("/{post-id}")
+    public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(
+            @PathVariable(name = "post-id") final Long id
+    ) {
+        PostResponseDto post = postService.getPostById(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(post));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePostById(@PathVariable final Long id) {
+    @DeleteMapping("/{post-id}")
+    public ResponseEntity<?> deletePostById(
+            @PathVariable(name = "post-id") final Long id
+    ) {
         postService.deletePost(id);
-        ApiResponse<Void> response = new ApiResponse<>("200","게시글 삭제", null);
-
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.delete());
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable final Long id, @RequestBody PostRequest postRequest) {
-        PostResponse post = postService.updatePost(id, postRequest);
-        ApiResponse<PostResponse> response = new ApiResponse<>("200","게시글 수정", post);
-
-        return ResponseEntity.ok().body(response);
+    @PatchMapping("/{post-id}")
+    public ResponseEntity<?> updatePost(
+            @PathVariable(name = "post-id") final Long id,
+            @RequestBody PostRequestDto postRequestDto
+    ) {
+        PostResponseDto post = postService.updatePost(id, postRequestDto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.update(post));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> getPostsByTitle(@RequestParam String keyword) {
-        List<PostResponse> posts = postService.getPostsByTitle(keyword);
-        ApiResponse<List<PostResponse>> response = new ApiResponse<>("200", "게시글 조회", posts);
-
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<?> getPostsByTitle(
+            @RequestParam String keyword
+    ) {
+        List<PostResponseDto> posts = postService.getPostsByTitle(keyword);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
     }
 
 }

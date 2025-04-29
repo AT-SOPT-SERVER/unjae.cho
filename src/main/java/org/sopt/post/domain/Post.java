@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,7 +16,7 @@ public class Post {
         this.title = title;
     }
 
-    public Post() {}
+    protected Post() {}
 
     public Long getId() {
         return id;

@@ -1,16 +1,13 @@
 package org.sopt.global.exception;
-
 import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-public enum Error {
-
-    TITLE_EMPTY(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."),
-    TOO_LONG_TITLE(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다.");
+public class Error {
 
     private final HttpStatus status;
     private final String message;
 
-    Error(HttpStatus status, String message){
+    public Error(HttpStatus status, String message){
         this.status = status;
         this.message = message;
     }
@@ -22,4 +19,13 @@ public enum Error {
     public String getMessage() {
         return message;
     }
-}
+
+    public static ResponseStatusException BlankTitle() {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다.");
+    }
+
+    public static ResponseStatusException TooLongTitle() {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시글은 30자 이내여야 합니다.");
+    }
+
+    }

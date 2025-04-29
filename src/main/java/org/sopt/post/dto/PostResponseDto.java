@@ -2,22 +2,25 @@ package org.sopt.post.dto;
 
 import org.sopt.post.domain.Post;
 
-public class PostResponse {
+public class PostResponseDto {
 
     private final Long id;
     private final String title;
 
-    public PostResponse(Post post) {
+    public PostResponseDto(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
     }
-    public PostResponse(Long id, String title) {
+
+    public PostResponseDto(Long id, String title) {
         this.id = id;
         this.title = title;
     }
+
     public Long getId() {
         return id;
     }
+
     public String getTitle() {
         return title;
     }
