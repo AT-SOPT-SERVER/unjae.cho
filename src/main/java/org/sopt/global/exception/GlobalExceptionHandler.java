@@ -13,4 +13,6 @@ public class GlobalExceptionHandler {
                 .status(e.getStatus())
                 .body(e.getErrorResponse());
     }
+
+    //예외 핸들링 리팩터링은 3주차 과제 예외 처리 고민할 때 같이...
 }
