@@ -12,13 +12,24 @@ public class User {
 
     private String name;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Post> posts;
 
-    protected User() {}
+    protected User() {
+    }
 
-    public User(String name) {
+    public User(
+            String name
+    ) {
         this.name = name;
+    }
+
+    public User(
+            String name,
+            List<Post> posts
+    ) {
+        this.name = name;
+        this.posts = posts;
     }
 
     public Long getId() {
@@ -27,6 +38,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
     }
 
     public void setName(String name) {

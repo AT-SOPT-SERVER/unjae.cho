@@ -24,15 +24,15 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(
+            @RequestHeader Long userId,
             @RequestBody final PostRequestDto postRequestDto
     ) {
-        PostResponseDto post = postService.createPost(postRequestDto);
+        PostResponseDto post = postService.createPost(userId, postRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.create(post));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getAllPosts(
-        //    @RequestParam String keyword
     ) {
         List<PostResponseDto> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
