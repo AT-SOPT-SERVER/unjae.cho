@@ -74,4 +74,20 @@ public class PostService {
         post.setPost(postRequest.title(),postRequest.content());
         return new PostResponseDto(postRepository.save(post));
     }
+
+    public List<PostResponseDto> getPostsByTitle(
+            String title
+    ){
+        return postRepository.findPostByTitleContaining(title).stream()
+                .map(PostResponseDto::new)
+                .toList();
+    }
+
+    public List<PostResponseDto> getPostsByUser(
+            String author
+    ){
+        return postRepository.findPostByUser_Name(author).stream()
+                .map(PostResponseDto::new)
+                .toList();
+    }
 }

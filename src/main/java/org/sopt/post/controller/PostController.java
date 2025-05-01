@@ -55,11 +55,25 @@ public class PostController {
     }
 
     @PatchMapping("/{post-id}")
-    public ResponseEntity<?> updatePost(
+    public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(
             @PathVariable(name = "post-id") final Long id,
             @RequestBody PostRequestDto postRequestDto
     ) {
         PostResponseDto post = postService.updatePost(id, postRequestDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.update(post));
+    }
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<PostResponseDto>>> searchPost(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author
+    ){
+        List<PostResponseDto> posts;
+        if (author == null) {
+            posts = postService.getPostsByTitle(title);
+
+        } else  {
+            posts = postService.getPostsByUser(author);
+        }
+        return  ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
     }
 }
