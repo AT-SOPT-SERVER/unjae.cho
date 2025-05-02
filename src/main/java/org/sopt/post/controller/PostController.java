@@ -1,6 +1,7 @@
 package org.sopt.post.controller;
 
 import org.sopt.global.dto.ApiResponse;
+import org.sopt.post.dto.PostDetailResponseDto;
 import org.sopt.post.dto.PostRequestDto;
 import org.sopt.post.dto.PostResponseDto;
 import org.sopt.post.service.PostService;
@@ -33,21 +34,24 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getAllPosts(
+            @RequestHeader Long userId
     ) {
         List<PostResponseDto> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
     }
 
     @GetMapping("/{post-id}")
-    public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(
+    public ResponseEntity<ApiResponse<PostDetailResponseDto>> getPostById(
+            @RequestHeader Long userId,
             @PathVariable(name = "post-id") final Long id
     ) {
-        PostResponseDto post = postService.getPostById(id);
+        PostDetailResponseDto post = postService.getPostById(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(post));
     }
 
     @DeleteMapping("/{post-id}")
     public ResponseEntity<?> deletePostById(
+            @RequestHeader Long userId,
             @PathVariable(name = "post-id") final Long id
     ) {
         postService.deletePost(id);
@@ -56,6 +60,7 @@ public class PostController {
 
     @PatchMapping("/{post-id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(
+            @RequestHeader Long userId,
             @PathVariable(name = "post-id") final Long id,
             @RequestBody PostRequestDto postRequestDto
     ) {
@@ -65,6 +70,7 @@ public class PostController {
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> searchPost(
+            @RequestHeader Long userId,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String author
     ){

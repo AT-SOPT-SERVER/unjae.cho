@@ -2,6 +2,7 @@ package org.sopt.post.service;
 
 import jakarta.transaction.Transactional;
 import org.sopt.post.domain.Post;
+import org.sopt.post.dto.PostDetailResponseDto;
 import org.sopt.post.dto.PostRequestDto;
 import org.sopt.post.dto.PostResponseDto;
 import org.sopt.post.exception.PostNotFoundException;
@@ -47,10 +48,10 @@ public class PostService {
                 .toList();
     }
 
-    public PostResponseDto getPostById(
+    public PostDetailResponseDto getPostById(
             Long id
     ) {
-        return new PostResponseDto(postRepository.findById(id)
+        return new PostDetailResponseDto(postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new));   //예외 처리는 이곳!~
     }
 

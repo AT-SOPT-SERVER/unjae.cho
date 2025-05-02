@@ -1,7 +1,7 @@
 package org.sopt.post.exception;
 
 
-import org.sopt.global.dto.ApiException;
+import org.sopt.global.exception.ApiException;
 import org.sopt.global.exception.ErrorCode;
 
 public class PostNotFoundException extends ApiException {

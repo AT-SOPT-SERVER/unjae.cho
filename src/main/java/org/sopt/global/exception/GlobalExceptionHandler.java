@@ -1,9 +1,7 @@
 package org.sopt.global.exception;
 
-import org.sopt.global.dto.ApiException;
 import org.sopt.global.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -11,28 +9,21 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ApiException.class)
-    public ResponseEntity<ErrorResponse> handleApiException(ApiException e) {  //커스텀
+    @ExceptionHandler(ApiException.class)  //커스텀 예외
+    public ResponseEntity<ErrorResponse> handleApiException(ApiException e) {
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(new ErrorResponse(e.getErrorCode()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e) {   //적절하지 않은 인자
-        return ResponseEntity
-                .badRequest()
-                .body(new ErrorResponse(ErrorCode.BAD_REQUEST));
-    }
-
-    @ExceptionHandler(MissingRequestHeaderException.class)
-    public ResponseEntity<ErrorResponse> handleMissingRequestHeader(MissingRequestHeaderException e) { //id 헤더에 없는 경우
+    @ExceptionHandler(MissingRequestHeaderException.class)   //userId 헤더에 없는 경우
+    public ResponseEntity<ErrorResponse> handleMissingRequestHeader(MissingRequestHeaderException e) {
         return ResponseEntity
                 .badRequest()
                 .body(new ErrorResponse(ErrorCode.NULL_HEADER_USERID));
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)    //잘못된 데이터 타입으로 요청
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
         ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST);
         return ResponseEntity

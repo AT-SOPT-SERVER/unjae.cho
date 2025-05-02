@@ -1,6 +1,4 @@
-package org.sopt.global.dto;
-
-import org.sopt.global.exception.ErrorCode;
+package org.sopt.global.exception;
 
 public class ApiException extends RuntimeException {
 
