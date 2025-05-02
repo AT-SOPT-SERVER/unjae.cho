@@ -44,18 +44,6 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
-    public UserResponseDto updateUser(
-            Long id,
-            UserRequestDto userRequestDto
-    ){
-        UserValidator.validateUser(userRequestDto.name());
-        User user = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
-        user.setName(userRequestDto.name());
-        userRepository.save(user);
-        return new UserResponseDto(user);
-    }
-
     public void deleteUser(
             Long id
     ){

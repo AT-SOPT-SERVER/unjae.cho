@@ -62,6 +62,7 @@ public class PostController {
         PostResponseDto post = postService.updatePost(id, postRequestDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.update(post));
     }
+
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> searchPost(
             @RequestParam(required = false) String title,

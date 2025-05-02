@@ -45,19 +45,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{user-id}")
-    public ResponseEntity<?> deletePostById(
+    public ResponseEntity<?> deleteUserById(
             @PathVariable(name = "user-id") final Long id
     ) {
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.delete());
-    }
-
-    @PatchMapping("/{user-id}")
-    public ResponseEntity<?> updatePost(
-            @PathVariable(name = "user-id") final Long id,
-            @RequestBody UserRequestDto postRequestDto
-    ) {
-        UserResponseDto post = userService.updateUser(id, postRequestDto);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.update(post));
     }
 }
