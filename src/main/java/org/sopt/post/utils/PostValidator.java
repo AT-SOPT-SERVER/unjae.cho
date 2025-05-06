@@ -12,10 +12,8 @@ public class PostValidator {
         if (title == null || title.isBlank() || title.length() > MAX_TITLE){
             throw new InvalidTitleException();
         }
-        if (content == null || content.isBlank() || content.length() > MAX_CONTENT) {
+        else if (content == null || content.isBlank() || content.length() > MAX_CONTENT) {
             throw new InvalidContentException();
         }
     }
 }
-
-

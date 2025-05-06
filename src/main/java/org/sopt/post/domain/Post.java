@@ -3,8 +3,6 @@ package org.sopt.post.domain;
 import jakarta.persistence.*;
 import org.sopt.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
 @Entity

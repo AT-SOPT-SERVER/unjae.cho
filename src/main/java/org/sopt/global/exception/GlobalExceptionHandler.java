@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ErrorCode.NULL_HEADER_USERID));
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)    //잘못된 데이터 타입으로 요청
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)    //잘못된 데이터타입
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
         ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST);
         return ResponseEntity
