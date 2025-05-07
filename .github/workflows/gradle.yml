@@ -46,8 +46,8 @@ jobs:
 
       - name: Save PEM key
         run: |
-          echo "${{ secrets.NCP_KEY }}" > sopt-test.pem
-          chmod 600 sopt-test.pem
+          printf "%s" "${{ secrets.NCP_KEY }}" > sopt-test.pem
+          chmod 400 sopt-test.pem
 
       - name: Add EC2 server to known_hosts
         run: |
