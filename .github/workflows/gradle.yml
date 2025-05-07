@@ -83,8 +83,7 @@ jobs:
 
       - name: Copy jar to server
         run: |
-          scp ./build/libs/*.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/home/${{ secrets.NCP_USER }}/assignment-0.0.1-SNAPSHOT.jar
-
+          scp ./build/libs/assignment-0.0.1-SNAPSHOT.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/assignment-0.0.1-SNAPSHOT.jar
       - name: Restart Spring Boot on server
         run: |
           ssh ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} << 'EOF'
