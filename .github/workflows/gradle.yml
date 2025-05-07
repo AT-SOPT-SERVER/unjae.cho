@@ -49,6 +49,11 @@ jobs:
           echo "${{ secrets.NCP_KEY }}" > sopt-test.pem
           chmod 600 sopt-test.pem
 
+      - name: Add EC2 server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.NCP_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to NCP server
         run: |
           scp -i sopt-test.pem ./build/libs/assignment-0.0.1-SNAPSHOT.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/unjae.cho/build/libs/
