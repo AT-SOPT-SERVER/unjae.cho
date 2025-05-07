@@ -61,34 +61,23 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Add SSH key
+      - name: Copy .jar to NCP server and deploy
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.NCP_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.NCP_HOST }} >> ~/.ssh/known_hosts
+          scp ./build/libs/assignment-0.0.1-SNAPSHOT.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/unjae.cho/build/libs/
+          ssh ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} "java -jar /root/unjae.cho/build/libs/assignment-0.0.1-SNAPSHOT.jar"
 
-      - name: Copy jar to server
+      - name: Verify Deployment
         run: |
-          scp ./build/libs/assignment-0.0.1-SNAPSHOT.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/unjae.cho/build/libs/assignment-0.0.1-SNAPSHOT.jar
-          java -jar /root/unjae.cho/build/libs/assignment-0.0.1-SNAPSHOT.jar
-
-      - name: Restart Spring Boot on server
-        run: |
-          ssh ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} << 'EOF'
-            pkill -f 'assignment-0.0.1-SNAPSHOT.jar' || true
-            nohup java -jar /root/unjae.cho/build/libs/assignment-0.0.1-SNAPSHOT.jar &
-          EOF
+          ssh ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} "ps aux | grep assignment-0.0.1-SNAPSHOT.jar"
