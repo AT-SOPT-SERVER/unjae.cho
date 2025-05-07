@@ -57,7 +57,6 @@ jobs:
 
       - name: Deploy to NCP
         run: |
-          scp -i sopt-test.pem ./build/libs/assignment-0.0.1-SNAPSHOT.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/unjae.cho/build/libs/
           ssh -i sopt-test.pem ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} "java -jar /root/unjae.cho/build/libs/assignment-0.0.1-SNAPSHOT.jar &"
 
       - name: Verify Deployment
