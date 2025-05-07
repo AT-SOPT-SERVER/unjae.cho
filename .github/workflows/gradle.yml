@@ -44,21 +44,21 @@ jobs:
           name: assignment-jar
           path: ./build/libs/
 
-      - name: Save PEM key
-        run: |
-          printf "%s" "${{ secrets.NCP_KEY }}" > sopt-test.pem
-          chmod 600 sopt-test.pem
 
       - name: Add EC2 server to known_hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.NCP_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to NCP server
+      - name: Create PEM Key File
+        run: |
+          echo "${{ secrets.NCP_KEY }}" > sopt-test.pem
+          chmod 600 sopt-test.pem
+
+      - name: Deploy to NCP
         run: |
           scp -i sopt-test.pem ./build/libs/assignment-0.0.1-SNAPSHOT.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/unjae.cho/build/libs/
-          ssh -i sopt-test.pem ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} "pkill -f 'assignment-0.0.1-SNAPSHOT.jar' || true"
-          ssh -i sopt-test.pem ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} "nohup java -jar /root/unjae.cho/build/libs/assignment-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &"
+          ssh -i sopt-test.pem ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} "java -jar /root/unjae.cho/build/libs/assignment-0.0.1-SNAPSHOT.jar &"
 
       - name: Verify Deployment
         run: |
