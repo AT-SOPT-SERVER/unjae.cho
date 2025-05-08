@@ -24,15 +24,15 @@ jobs:
       - name: Add SSH key
         uses: webfactory/ssh-agent@v0.5.4
         with:
-          ssh-private-key: ${{ secrets.NCP_SSH_KEY }}
+          ssh-private-key: ${{ secrets.NCP_KEY }}
 
       - name: Copy jar to server
         run: |
-          scp build/libs/*.jar ${{ secrets.NCP_SERVER_USER }}@${{ secrets.NCP_SERVER_HOST }}:/home/deploy/unjae/app.jar
+          scp build/libs/*.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/home/deploy/unjae/app.jar
 
       - name: Remote SSH - Restart app
         run: |
-          ssh ${{ secrets.NCP_SERVER_USER }}@${{ secrets.NCP_SERVER_HOST }} << 'EOF'
+          ssh ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} << 'EOF'
             if [ -f /unjae.cho/app.pid ]; then
               kill -9 $(cat /unjae.cho/app.pid) || true
             fi
