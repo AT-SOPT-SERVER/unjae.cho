@@ -52,8 +52,8 @@ jobs:
 
       - name: Create PEM Key File
         run: |
-        echo "${{ secrets.NCP_KEY_B64 }}" | base64 -d > sopt-test.pem
-        chmod 600 sopt-test.pem
+          echo "${{ secrets.NCP_KEY_B64 }}" | base64 -d > sopt-test.pem
+          chmod 600 sopt-test.pem
 
       - name: Test SSH connection
         run: |
