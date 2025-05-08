@@ -1,27 +1,27 @@
-name: Spring Boot Deploy to NCP
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "deploy" ]
+    branches:
+      - deploy  # deploy 브랜치에 푸시될 때마다 실행
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew build
 
-      - name: Add SSH key
+      - name: Add SSH key to ssh-agent
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.NCP_KEY }}
@@ -36,8 +36,10 @@ jobs:
 
       - name: Restart Spring Boot Application
         run: |
-          ssh ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} << 'EOF'
+          ssh -i ${{ secrets.NCP_KEY }} ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} << 'EOF'
+            # 기존 서버 종료
             pkill -f 'java -jar'
           
+            # 새로운 애플리케이션 실행
             nohup java -jar /root/unjae.cho/app.jar > nohup.out 2>&1 &
           EOF
