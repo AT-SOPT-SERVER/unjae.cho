@@ -32,14 +32,12 @@ jobs:
 
       - name: Deploy to server
         run: |
-          scp build/libs/*.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/unjae.cho/app.jar
+          scp -i ${{ secrets.NCP_KEY }} build/libs/*.jar ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }}:/root/unjae.cho/app.jar
 
       - name: Restart Spring Boot Application
         run: |
           ssh ${{ secrets.NCP_USER }}@${{ secrets.NCP_HOST }} << 'EOF'
-            # 기존 서버 종료
             pkill -f 'java -jar'
           
-            # 새로운 애플리케이션 실행
             nohup java -jar /root/unjae.cho/app.jar > nohup.out 2>&1 &
           EOF
