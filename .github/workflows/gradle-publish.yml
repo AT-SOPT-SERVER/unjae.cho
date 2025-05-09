@@ -52,7 +52,7 @@ jobs:
           script: |
             sudo chmod 666 /var/run/docker.sock
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker ps
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/tests-server:latest || true
             docker stop tests-server || true
             docker rm tests-server || true
             docker pull tests-server:lastest
