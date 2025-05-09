@@ -55,6 +55,6 @@ jobs:
             docker ps
             docker stop tests-server || true
             docker rm tests-server || true
-            docker pull tests-server
+            docker pull tests-server:lastest
             docker run -d -p 8080:8080 --name tests-server ${{ secrets.DOCKER_USERNAME }}/tests-server
 
