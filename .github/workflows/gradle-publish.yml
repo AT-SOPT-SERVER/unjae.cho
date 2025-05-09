@@ -42,11 +42,6 @@ jobs:
       - name: Publish Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/tests-server
 
-      # 5. Docker 이미지 빌드 및 푸시
-      - name: Docker build & push to Docker hub
-        run: |
-          sudo chmod 666 /var/run/docker.sock
-
       # 6. EC2 접속 및 배포
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.0
@@ -55,6 +50,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
+            sudo chmod 666 /var/run/docker.sock
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull tests
             docker stop tests || true
