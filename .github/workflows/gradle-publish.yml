@@ -55,6 +55,6 @@ jobs:
             docker rmi ${{ secrets.DOCKER_USERNAME }}/tests-server:latest || true
             docker stop tests-server || true
             docker rm tests-server || true
-            docker pull tests-server:lastest
+            docker pull tests-server:latest
             docker run -d -p 8080:8080 --name tests-server ${{ secrets.DOCKER_USERNAME }}/tests-server
 
