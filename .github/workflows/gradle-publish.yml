@@ -23,7 +23,7 @@ jobs:
       # 3. 빌드
       - name: Build with Gradle
         run: |
-          chmod +x gradlew
+          chmod +x gradlew   
           ./gradlew build
 
       # 4. Docker 로그인
