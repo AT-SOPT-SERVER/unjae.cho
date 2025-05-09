@@ -58,5 +58,5 @@ jobs:
             docker rmi ${{ secrets.DOCKER_USERNAME }}/tasty-server || true
             docker stop tasty-server || true
             docker rm tasty-server || true
-            docker pull tasty-server
+            docker pull ${{ secrets.DOCKER_USERNAME }}/tasty-server
             docker run -d -p 8080:8080 --name tasty-server ${{ secrets.DOCKER_USERNAME }}/tasty-server
