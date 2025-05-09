@@ -26,7 +26,7 @@ public class UserController {
             @RequestBody final UserRequestDto userRequestDto
     ) {
         UserResponseDto user = userService.createUser(userRequestDto);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.create(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.create(user));
     }
 
     @GetMapping
