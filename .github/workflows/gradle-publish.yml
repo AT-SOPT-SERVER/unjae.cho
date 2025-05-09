@@ -56,3 +56,4 @@ jobs:
             docker stop tests-server || true
             docker rm tests-server || true
             docker run -d -p 8080:8080 --name tests-server ${{ secrets.DOCKER_USERNAME }}/tests-server
+
