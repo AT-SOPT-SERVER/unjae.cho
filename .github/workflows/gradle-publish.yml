@@ -52,8 +52,7 @@ jobs:
           script: |
             sudo chmod 666 /var/run/docker.sock
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull tests
-            docker stop tests || true
-            docker rm tests || true
-            docker run -d -p 8080:8080 --name tests ${{ secrets.DOCKER_USERNAME }}/tests
-            
+            docker pull tests-server
+            docker stop tests-server || true
+            docker rm tests-server || true
+            docker run -d -p 8080:8080 --name tests-server ${{ secrets.DOCKER_USERNAME }}/tests-server
