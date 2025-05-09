@@ -34,9 +34,6 @@ jobs:
       - name: Docker build & push to Docker hub
         run: |
           sudo chmod 666 /var/run/docker.sock
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-server .
-          docker push ${{ secrets.DOCKER_USERNAME }}/spring-server
 
       # 6. EC2 접속 및 배포
       - name: Deploy to EC2
@@ -47,7 +44,8 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             cd /home/ubuntu/unjae.cho
-            docker pull ${{ secrets.DOCKER_USERNAME }}/spring-server
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-server .
             docker stop spring-server || true
             docker rm spring-server || true
             docker run -d -p 8080:8080 --name spring-server ${{ secrets.DOCKER_USERNAME }}/spring-server
