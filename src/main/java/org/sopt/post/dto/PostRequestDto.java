@@ -1,4 +1,7 @@
 package org.sopt.post.dto;
 
-public record PostRequestDto(String title) {
+public record PostRequestDto(
+        String title,
+        String content
+) {
 }
