@@ -54,7 +54,7 @@ public class PostController {
             @RequestHeader Long userId,
             @PathVariable(name = "post-id") final Long id
     ) {
-        postService.deletePost(id);
+        postService.deletePost(userId, id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.delete());
     }
 
@@ -64,7 +64,7 @@ public class PostController {
             @PathVariable(name = "post-id") final Long id,
             @RequestBody PostRequestDto postRequestDto
     ) {
-        PostResponseDto post = postService.updatePost(id, postRequestDto);
+        PostResponseDto post = postService.updatePost(userId, id, postRequestDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.update(post));
     }
 

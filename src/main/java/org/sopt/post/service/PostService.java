@@ -1,10 +1,10 @@
 package org.sopt.post.service;
 
-import jakarta.transaction.Transactional;
 import org.sopt.post.domain.Post;
 import org.sopt.post.dto.PostDetailResponseDto;
 import org.sopt.post.dto.PostRequestDto;
 import org.sopt.post.dto.PostResponseDto;
+import org.sopt.post.exception.NotPostAuthorException;
 import org.sopt.post.exception.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
 import org.sopt.post.utils.PostValidator;
@@ -12,6 +12,8 @@ import org.sopt.user.domain.User;
 import org.sopt.user.exception.UserNotFoundException;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -41,6 +43,7 @@ public class PostService {
         return new PostResponseDto(postRepository.save(post));
     }
 
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getAllPosts(
     ) {
         return postRepository.findAllByOrderByCreatedAtDesc().stream()
@@ -55,16 +58,25 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new));   //예외 처리는 이곳!~
     }
 
+    @Transactional
     public void deletePost(
+            Long userId,
             Long id
     ) {
+
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        postRepository.delete(post);
+        if (post.getUser().getId().equals(userId)) {
+            postRepository.delete(post);
+        } else {
+            throw new NotPostAuthorException();
+        }
+
     }
 
     @Transactional
     public PostResponseDto updatePost(
+            Long userId,
             Long id,
             PostRequestDto postRequest
     ) {
@@ -72,10 +84,16 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
 
-        post.setPost(postRequest.title(),postRequest.content());
-        return new PostResponseDto(postRepository.save(post));
+        if (post.getUser().getId().equals(userId)) {
+            post.setPost(postRequest.title(),postRequest.content());
+            return new PostResponseDto(postRepository.save(post));
+        } else {
+            throw new NotPostAuthorException();
+        }
+
     }
 
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getPostsByTitle(
             String title
     ){
@@ -84,10 +102,12 @@ public class PostService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getPostsByUser(
             String author
     ){
-        return postRepository.findPostByUser_Name(author).stream()
+        User PostUser = userRepository.findByName(author);
+        return postRepository.findPostByUser(PostUser).stream()
                 .map(PostResponseDto::new)
                 .toList();
     }
