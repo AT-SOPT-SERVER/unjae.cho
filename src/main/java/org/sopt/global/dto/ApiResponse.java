@@ -20,6 +20,7 @@ public record ApiResponse<T>(
     public static <T> ApiResponse<T> fail(int status, String message) {
         return new ApiResponse<>(status, message, null);
     }
+
 }
 
 
