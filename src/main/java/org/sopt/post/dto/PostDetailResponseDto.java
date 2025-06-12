@@ -1,12 +1,18 @@
 package org.sopt.post.dto;
 
+import lombok.Getter;
+import org.sopt.comment.dto.CommentResponseDto;
 import org.sopt.post.domain.Post;
 
+import java.util.List;
+
+@Getter
 public class PostDetailResponseDto {
 
     private final String title;
     private final String content;
     private final String userName; // User 전체 대신 이름만
+    private final List<CommentResponseDto> comments;
 
     public PostDetailResponseDto(
             Post post
@@ -14,27 +20,8 @@ public class PostDetailResponseDto {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.userName = post.getUser().getName();
-    }
-
-    public PostDetailResponseDto(
-            String title,
-            String content,
-            String userName
-    ) {
-        this.title = title;
-        this.content = content;
-        this.userName = userName;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getUserName() {
-        return userName;
+        this.comments = post.getComments().stream()
+                .map(CommentResponseDto::new)
+                .toList();
     }
 }

@@ -1,10 +1,15 @@
 package org.sopt.post.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import org.sopt.comment.domain.Comment;
 import org.sopt.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Getter
 @Entity
 public class Post {
     @Id
@@ -18,13 +23,16 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     protected Post() {}
 
@@ -32,30 +40,6 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public void setPost(
