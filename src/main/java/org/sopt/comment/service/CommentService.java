@@ -4,12 +4,13 @@ import org.sopt.comment.dto.CommentRequestDto;
 import org.sopt.comment.dto.CommentResponseDto;
 import org.sopt.comment.domain.Comment;
 import org.sopt.comment.repository.CommentRepository;
+import org.sopt.global.exception.custom.CommentNotFoundException;
+import org.sopt.global.exception.custom.DistrictedUserException;
 import org.sopt.post.domain.Post;
-import org.sopt.post.exception.PostNotFoundException;
+import org.sopt.global.exception.custom.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
 import org.sopt.user.domain.User;
-import org.sopt.user.exception.InvalidUserNameException;
-import org.sopt.user.exception.UserNotFoundException;
+import org.sopt.global.exception.custom.UserNotFoundException;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +45,42 @@ public class CommentService {
 
         Comment comment = new Comment(commentRequest.content(), user, post);
         return new CommentResponseDto(commentRepository.save(comment));
+    }
+
+    @Transactional
+    public CommentResponseDto updateComment(
+            Long userId,
+            Long commentId,
+            CommentRequestDto commentRequest
+    ){
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (comment.getAuthor().equals(user)) {
+            comment.setContent(commentRequest.content());
+            return new CommentResponseDto(commentRepository.save(comment));
+        }
+        else {
+            throw new DistrictedUserException();
+        }
+    }
+
+    @Transactional
+    public void deleteComment(
+            Long userId,
+            Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (comment.getAuthor().equals(user)) {
+            commentRepository.delete(comment);
+        }
+        else {
+            throw new DistrictedUserException();
+        }
     }
 }
