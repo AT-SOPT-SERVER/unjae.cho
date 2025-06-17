@@ -1,4 +1,4 @@
-package org.sopt.user.exception;
+package org.sopt.global.exception.custom;
 
 import org.sopt.global.exception.ApiException;
 import org.sopt.global.exception.ErrorCode;

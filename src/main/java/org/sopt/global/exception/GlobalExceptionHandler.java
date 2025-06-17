@@ -1,10 +1,14 @@
 package org.sopt.global.exception;
 
 import org.sopt.global.dto.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,14 +27,25 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ErrorCode.NULL_HEADER_USERID));
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)    //잘못된 데이터타입
-    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST);
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
         return ResponseEntity
-                .status(ErrorCode.BAD_REQUEST.getStatus())  // 400 상태 코드
-                .body(errorResponse);
+                .badRequest()
+                .body(new ErrorResponse(ErrorCode.INVALID_URL_ERROR));
     }
 
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse(ErrorCode.INVALID_URL_ERROR));
+    }
+/*
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleInternalServerException(Exception e) {
+        return HolixResponse.failure(CommonErrorCode.METHOD_NOT_ALLOWED_ERROR);
+    }
+*/
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         return ResponseEntity

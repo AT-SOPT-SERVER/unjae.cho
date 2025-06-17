@@ -1,10 +1,10 @@
-package org.sopt.comment.exception;
+package org.sopt.global.exception.custom;
 
 import org.sopt.global.exception.ApiException;
 import org.sopt.global.exception.ErrorCode;
 
 public class CommentNotFoundException extends ApiException {
     public CommentNotFoundException() {
-        super(ErrorCode.INVALID_CONTENT_LENGTH);
+        super(ErrorCode.COMMENT_NOT_FOUND);
     }
 }
