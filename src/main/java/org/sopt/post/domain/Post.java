@@ -3,6 +3,7 @@ package org.sopt.post.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.sopt.comment.domain.Comment;
+import org.sopt.like.domain.PostLike;
 import org.sopt.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
@@ -28,11 +29,14 @@ public class Post {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();;
+    private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PostLike> likes = new ArrayList<>();
 
     protected Post() {}
 
