@@ -1,13 +1,17 @@
 package org.sopt.user.service;
 
+import org.sopt.global.exception.custom.UnauthorizedException;
 import org.sopt.user.dto.UserRequestDto;
 import org.sopt.user.dto.UserResponseDto;
 import org.sopt.user.domain.User;
-import org.sopt.user.exception.UserNotFoundException;
+import org.sopt.global.exception.custom.UserNotFoundException;
 import org.sopt.user.repository.UserRepository;
 import org.sopt.user.utils.UserValidator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -19,6 +23,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public UserResponseDto createUser(
             UserRequestDto userRequestDto
     ) {
@@ -28,6 +33,7 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponseDto> getAllUsers(
     ){
         return userRepository.findAll().stream()
@@ -35,6 +41,7 @@ public class UserService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public UserResponseDto getUserById(
             Long id
     ){
@@ -44,12 +51,19 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
+    @Transactional
     public void deleteUser(
-            Long id
+            Long userId,
+            Long targetId
     ){
         User user = userRepository
-                .findById(id)
+                .findById(targetId)
                 .orElseThrow(UserNotFoundException::new);
-        userRepository.delete(user);
+        if ((user.getId().equals(userId))) {
+            userRepository.delete(user);
+        }
+        else {
+            throw new UnauthorizedException();
+        }
     }
 }

@@ -1,6 +1,6 @@
 package org.sopt.user.utils;
 
-import org.sopt.user.exception.InvalidUserNameException;
+import org.sopt.global.exception.custom.InvalidUserNameException;
 
 public class UserValidator {
 

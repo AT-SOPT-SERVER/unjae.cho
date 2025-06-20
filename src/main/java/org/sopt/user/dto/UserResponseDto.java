@@ -1,11 +1,13 @@
 package org.sopt.user.dto;
 
+import lombok.Getter;
 import org.sopt.user.domain.User;
 
+@Getter
 public class UserResponseDto
  {
-     Long id;
-     String name;
+     final Long id;
+     final String name;
 
     public UserResponseDto(
             User user
@@ -13,12 +15,4 @@ public class UserResponseDto
         this.id = user.getId();
         this.name = user.getName();
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-}
+ }
