@@ -1,5 +1,6 @@
 package org.sopt.global.exception;
 
+import org.sopt.global.dto.ApiResponse;
 import org.sopt.global.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,32 +21,13 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(e.getErrorCode()));
     }
 
-    @ExceptionHandler(MissingRequestHeaderException.class)   //userId 헤더에 없는 경우
-    public ResponseEntity<ErrorResponse> handleMissingRequestHeader(MissingRequestHeaderException e) {
-        return ResponseEntity
-                .badRequest()
-                .body(new ErrorResponse(ErrorCode.NULL_HEADER_USERID));
-    }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
-        return ResponseEntity
-                .badRequest()
-                .body(new ErrorResponse(ErrorCode.INVALID_URL_ERROR));
-    }
-
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)  //존재하는 URL에 존재하지 않는 METHOD
     public ResponseEntity<ErrorResponse> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorResponse(ErrorCode.INVALID_URL_ERROR));
+                .body(new ErrorResponse(ErrorCode.METHOD_NOT_ALLOWED_ERROR));
     }
-/*
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleInternalServerException(Exception e) {
-        return HolixResponse.failure(CommonErrorCode.METHOD_NOT_ALLOWED_ERROR);
-    }
-*/
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         return ResponseEntity
