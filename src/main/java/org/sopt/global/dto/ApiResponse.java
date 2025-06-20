@@ -1,5 +1,7 @@
 package org.sopt.global.dto;
 
+import org.sopt.global.exception.ErrorCode;
+
 public record ApiResponse<T>(
         int status,
         String message,
@@ -17,10 +19,10 @@ public record ApiResponse<T>(
     public static <T> ApiResponse<T> delete() {
         return new ApiResponse<>(200, "삭제됐습니다~!", null);
     }
-    public static <T> ApiResponse<T> fail(int status, String message) {
-        return new ApiResponse<>(status, message, null);
+    public static <T> ApiResponse<T> create() {return new ApiResponse<>(201, "생성됐습니다~!", null);}
+    public static <T> ApiResponse<T> fail(ErrorCode failureCode) {
+        return new ApiResponse<>(failureCode.getStatus(), failureCode.getMessage(), null);
     }
-
 }
 
 
