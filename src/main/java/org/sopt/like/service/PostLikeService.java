@@ -11,6 +11,9 @@ import org.sopt.global.exception.custom.UserNotFoundException;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+
 @Service
 public class PostLikeService {
 
@@ -41,5 +44,18 @@ public class PostLikeService {
             throw new DuplicatedLikeException();
         }
     }
+
+    public void removeLike(Long userId, Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow((PostNotFoundException::new));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        if(!postLikeRepository.existsByPostAndUser(post, user)) {
+            List<PostLike> postLikes = postLikeRepository.findByPostAndUser(post, user);
+        }
+    }
+
 }
 
