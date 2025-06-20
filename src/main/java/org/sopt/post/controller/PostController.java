@@ -1,6 +1,8 @@
 package org.sopt.post.controller;
 
+import org.sopt.auth.annotation.UserId;
 import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.dto.PageResponse;
 import org.sopt.post.dto.PostDetailResponseDto;
 import org.sopt.post.dto.PostRequestDto;
 import org.sopt.post.dto.PostResponseDto;
@@ -9,10 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("api/posts")
 public class PostController {
 
     private final PostService postService;
@@ -25,7 +25,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(
-            @RequestHeader Long userId,
+            @UserId final Long userId,
             @RequestBody final PostRequestDto postRequestDto
     ) {
         PostResponseDto post = postService.createPost(userId, postRequestDto);
@@ -33,16 +33,18 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PostResponseDto>>> getAllPosts(
-            @RequestHeader Long userId
+    public ResponseEntity<ApiResponse<PageResponse<PostResponseDto>>> getAllPosts(
+            @UserId final Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        List<PostResponseDto> posts = postService.getAllPosts();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
+        PageResponse<PostResponseDto> posts = postService.getAllPosts(page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.read(posts));
     }
 
     @GetMapping("/{post-id}")
     public ResponseEntity<ApiResponse<PostDetailResponseDto>> getPostById(
-            @RequestHeader Long userId,
+            @UserId final Long userId,
             @PathVariable(name = "post-id") final Long id
     ) {
         PostDetailResponseDto post = postService.getPostById(id);
@@ -51,7 +53,7 @@ public class PostController {
 
     @DeleteMapping("/{post-id}")
     public ResponseEntity<?> deletePostById(
-            @RequestHeader Long userId,
+            @UserId final Long userId,
             @PathVariable(name = "post-id") final Long id
     ) {
         postService.deletePost(userId, id);
@@ -60,7 +62,7 @@ public class PostController {
 
     @PatchMapping("/{post-id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(
-            @RequestHeader Long userId,
+            @UserId final Long userId,
             @PathVariable(name = "post-id") final Long id,
             @RequestBody PostRequestDto postRequestDto
     ) {
@@ -69,18 +71,14 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<PostResponseDto>>> searchPost(
-            @RequestHeader Long userId,
+    public ResponseEntity<ApiResponse<PageResponse<PostResponseDto>>> searchPost(
+            @UserId final Long userId,
             @RequestParam(required = false) String title,
-            @RequestParam(required = false) String author
+            @RequestParam(required = false) String author,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ){
-        List<PostResponseDto> posts;
-        if (author == null) {
-            posts = postService.getPostsByTitle(title);
-
-        } else  {
-            posts = postService.getPostsByUser(author);
-        }
-        return  ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
+        PageResponse<PostResponseDto> posts = postService.searchPosts(title, author, page, size);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
     }
 }
