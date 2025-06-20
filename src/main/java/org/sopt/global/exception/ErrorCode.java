@@ -1,7 +1,8 @@
 package org.sopt.global.exception;
 
-import org.springframework.http.HttpStatus;
+import lombok.Getter;
 
+@Getter
 public enum ErrorCode {
     INVALID_URL_ERROR(404, "지원하지 않는 URL 입니다."),
     METHOD_NOT_ALLOWED_ERROR(400, "잘못된 HTTP method 요청입니다."),
@@ -16,7 +17,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500,  "서버 개발자 잘못입니다.."),
     COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다.."),
     DUPLICATE_LIKE(400, "좋아요 누른 게시글입니다.."),
-    DISTRICTED_USER(400, "권한이 없습니다..");
+    UNAUTHORIZED(403, "권한이 없습니다..");
 
     private final int status;
     private final String message;
@@ -26,7 +27,5 @@ public enum ErrorCode {
         this.message = message;
     }
 
-    public int getStatus() { return status; }
-    public String getMessage() { return message; }
 }
 
