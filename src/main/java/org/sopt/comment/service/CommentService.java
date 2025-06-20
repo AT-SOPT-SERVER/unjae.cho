@@ -4,13 +4,11 @@ import org.sopt.comment.dto.CommentRequestDto;
 import org.sopt.comment.dto.CommentResponseDto;
 import org.sopt.comment.domain.Comment;
 import org.sopt.comment.repository.CommentRepository;
-import org.sopt.global.exception.custom.CommentNotFoundException;
-import org.sopt.global.exception.custom.DistrictedUserException;
+import org.sopt.comment.util.CommentValidator;
+import org.sopt.global.exception.custom.*;
 import org.sopt.post.domain.Post;
-import org.sopt.global.exception.custom.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
 import org.sopt.user.domain.User;
-import org.sopt.global.exception.custom.UserNotFoundException;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +41,9 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
+        CommentValidator.validateComment(commentRequest.content());
         Comment comment = new Comment(commentRequest.content(), user, post);
+
         return new CommentResponseDto(commentRepository.save(comment));
     }
 
@@ -53,6 +53,8 @@ public class CommentService {
             Long commentId,
             CommentRequestDto commentRequest
     ){
+        CommentValidator.validateComment(commentRequest.content());
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         User user = userRepository.findById(userId)
@@ -63,7 +65,7 @@ public class CommentService {
             return new CommentResponseDto(commentRepository.save(comment));
         }
         else {
-            throw new DistrictedUserException();
+            throw new UnauthorizedException();
         }
     }
 
@@ -80,7 +82,7 @@ public class CommentService {
             commentRepository.delete(comment);
         }
         else {
-            throw new DistrictedUserException();
+            throw new UnauthorizedException();
         }
     }
 }
