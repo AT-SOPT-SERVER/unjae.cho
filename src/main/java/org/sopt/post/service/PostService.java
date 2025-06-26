@@ -45,7 +45,7 @@ public class PostService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        Post post = new Post(postRequest.title(), postRequest.contents(), user);
+        Post post = new Post(postRequest.title(), postRequest.contents(), user, postRequest.tags());
 
         return new PostResponseDto(postRepository.save(post));
     }
@@ -112,9 +112,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<PostResponseDto> searchPosts(String title, String author, int page, int size) {
+    public PageResponse<PostResponseDto> searchPosts(String title, String author, String tag, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Post> postPage = postRepository.searchPosts(title, author, pageable);
+        Page<Post> postPage = postRepository.searchPosts(title, author, tag, pageable);
 
         List<PostResponseDto> content = postPage.getContent().stream()
                 .map(PostResponseDto::new)

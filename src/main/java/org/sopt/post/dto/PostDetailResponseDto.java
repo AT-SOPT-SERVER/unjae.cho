@@ -13,6 +13,7 @@ public class PostDetailResponseDto {
     private final String contents;
     private final String userName; // User 전체 대신 이름만
     private final List<CommentResponseDto> comments;
+    private final String tags;
     private final int likes;
 
     public PostDetailResponseDto(
@@ -24,6 +25,7 @@ public class PostDetailResponseDto {
         this.comments = post.getComments().stream()
                 .map(CommentResponseDto::new)
                 .toList();
+        this.tags = post.getTags();
         this.likes = post.getLikes().size();
 
     }

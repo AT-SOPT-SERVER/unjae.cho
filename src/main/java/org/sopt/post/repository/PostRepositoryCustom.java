@@ -5,5 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PostRepositoryCustom {
-    Page<Post> searchPosts(String title, String author, Pageable pageable);
+    Page<Post> searchPosts(
+            String title,
+            String author,
+            String tag,
+            Pageable pageable
+    );
 }

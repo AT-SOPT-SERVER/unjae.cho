@@ -75,10 +75,11 @@ public class PostController {
             @UserId final Long userId,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String author,
+            @RequestParam(required = false) String tag,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        PageResponse<PostResponseDto> posts = postService.searchPosts(title, author, page, size);
+        PageResponse<PostResponseDto> posts = postService.searchPosts(title, author, tag, page, size);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(posts));
     }
 }

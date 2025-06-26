@@ -41,6 +41,10 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PostLike> likes = new ArrayList<>();
 
+
+    @Column(nullable = true)
+    private String tags;
+
     protected Post() {}
 
     public Post(String title, String contents, User user) {
@@ -55,5 +59,11 @@ public class Post {
     ){
         this.title = title;
         this.contents = contents;
+    }
+    public Post(String title, String contents, User user, String tag) {
+        this.title = title;
+        this.contents = contents;
+        this.user = user;
+        this.tags = tag;
     }
 }

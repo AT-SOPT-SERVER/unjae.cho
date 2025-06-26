@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.sopt.post.domain.Post;
 import org.sopt.post.domain.QPost;
+import org.sopt.post.domain.submodel.Tag;
 import org.sopt.user.domain.QUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +18,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Post> searchPosts(String title, String author, Pageable pageable) {
+    public Page<Post> searchPosts(
+            String title,
+            String author,
+            String tag,
+            Pageable pageable
+    ) {
         QPost post = QPost.post;
         QUser user = QUser.user;
 
@@ -25,8 +31,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         if (title != null && !title.isEmpty()) {
             builder.and(post.title.contains(title));
         }
+
         if (author != null && !author.isEmpty()) {
             builder.and(post.user.name.eq(author));
+        }
+        if (tag != null && !tag.isEmpty()) {
+            builder.and(post.tags.eq(tag));
         }
 
         List<Post> content = queryFactory
