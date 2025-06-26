@@ -1,4 +1,4 @@
-package org.sopt.comment.util;
+package org.sopt.comment.utils;
 
 import org.sopt.global.exception.custom.InvalidContentException;
 

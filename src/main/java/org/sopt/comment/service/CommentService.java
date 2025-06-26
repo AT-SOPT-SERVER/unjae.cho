@@ -4,7 +4,7 @@ import org.sopt.comment.dto.CommentRequestDto;
 import org.sopt.comment.dto.CommentResponseDto;
 import org.sopt.comment.domain.Comment;
 import org.sopt.comment.repository.CommentRepository;
-import org.sopt.comment.util.CommentValidator;
+import org.sopt.comment.utils.CommentValidator;
 import org.sopt.global.exception.custom.*;
 import org.sopt.post.domain.Post;
 import org.sopt.post.repository.PostRepository;
