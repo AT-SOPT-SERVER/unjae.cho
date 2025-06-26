@@ -34,8 +34,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .leftJoin(post.user, user).fetchJoin()
                 .where(builder)
                 .orderBy(post.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())   //현재 페이지
+                .limit(pageable.getPageSize())  //페이지 당 게시글
                 .fetch();
 
         long total = queryFactory

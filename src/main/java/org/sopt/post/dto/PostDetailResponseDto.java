@@ -3,7 +3,6 @@ package org.sopt.post.dto;
 import lombok.Getter;
 import org.sopt.comment.dto.CommentResponseDto;
 import org.sopt.post.domain.Post;
-import org.sopt.post.domain.submodel.Tag;
 
 import java.util.List;
 

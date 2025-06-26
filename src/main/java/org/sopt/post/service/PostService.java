@@ -105,7 +105,6 @@ public class PostService {
 
         if (post.getUser().getId().equals(userId)) {
             post.setPost(postRequest.title(),postRequest.contents());
-
             return new PostResponseDto(postRepository.save(post));
         } else {
             throw new NotPostAuthorException();
