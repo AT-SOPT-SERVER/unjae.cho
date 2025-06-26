@@ -1,15 +1,14 @@
 package org.sopt.like.service;
 
 import org.sopt.comment.domain.Comment;
-import org.sopt.global.exception.custom.CommentNotFoundException;
+import org.sopt.global.exception.custom.*;
 import org.sopt.comment.repository.CommentRepository;
 import org.sopt.like.domain.CommentLike;
-import org.sopt.global.exception.custom.DuplicatedLikeException;
 import org.sopt.like.repository.CommentLikeRepository;
 import org.sopt.user.domain.User;
-import org.sopt.global.exception.custom.UserNotFoundException;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentLikeService {
@@ -27,6 +26,7 @@ public class CommentLikeService {
         this.commentLikeRepository = commentLikeRepository;
     }
 
+    @Transactional
     public void likeComment(Long userId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow((CommentNotFoundException::new));
@@ -40,6 +40,22 @@ public class CommentLikeService {
         }
         else{
             throw new DuplicatedLikeException();
+        }
+    }
+
+    @Transactional
+    public void removeLike(Long userId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow((PostNotFoundException::new));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (commentLikeRepository.existsByCommentAndUser(comment, user)) {
+            CommentLike commentLike = commentLikeRepository.findByCommentAndUser(comment, user);
+            commentLikeRepository.delete(commentLike);
+        } else {
+            throw new LikeNullException();
         }
     }
 }

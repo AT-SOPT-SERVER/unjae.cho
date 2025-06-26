@@ -1,6 +1,7 @@
 package org.sopt.like.service;
 
 import org.sopt.global.exception.custom.DuplicatedLikeException;
+import org.sopt.global.exception.custom.LikeNullException;
 import org.sopt.like.repository.PostLikeRepository;
 import org.sopt.like.domain.PostLike;
 import org.sopt.post.domain.Post;
@@ -10,9 +11,7 @@ import org.sopt.global.exception.custom.PostNotFoundException;
 import org.sopt.global.exception.custom.UserNotFoundException;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PostLikeService {
@@ -29,6 +28,7 @@ public class PostLikeService {
         this.postLikeRepository = postLikeRepository;
     }
 
+    @Transactional
     public void likePost(Long userId, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow((PostNotFoundException::new));
@@ -45,6 +45,7 @@ public class PostLikeService {
         }
     }
 
+    @Transactional
     public void removeLike(Long userId, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow((PostNotFoundException::new));
@@ -52,10 +53,12 @@ public class PostLikeService {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        if(!postLikeRepository.existsByPostAndUser(post, user)) {
-            List<PostLike> postLikes = postLikeRepository.findByPostAndUser(post, user);
+        if (postLikeRepository.existsByPostAndUser(post, user)) {
+            PostLike postLikes = postLikeRepository.findByPostAndUser(post, user);
+            postLikeRepository.delete(postLikes);
+        } else {
+            throw new LikeNullException();
         }
     }
-
 }
 

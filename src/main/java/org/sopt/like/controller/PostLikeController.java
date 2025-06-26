@@ -29,7 +29,7 @@ public class PostLikeController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.create());
     }
 
-    @DeleteMapping("posts/{post-id}/likes")
+    @DeleteMapping("/{post-id}/likes")
     public ResponseEntity<?> removeLike(
             @UserId Long userId,
             @PathVariable(name = "post-id") final Long postId

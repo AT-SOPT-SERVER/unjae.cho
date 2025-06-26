@@ -6,6 +6,7 @@ import org.sopt.like.service.CommentLikeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,5 +27,14 @@ public class CommentLikeController {
     ){
         commentLikeService.likeComment(userId, commentId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.create());
+    }
+
+    @DeleteMapping("/{comment-id}/likes")
+    public ResponseEntity<?> removeLike(
+            @UserId Long userId,
+            @PathVariable(name = "comment-id") final Long commentId
+    ){
+        commentLikeService.removeLike(userId, commentId);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.delete());
     }
 }
