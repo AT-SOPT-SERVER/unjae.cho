@@ -17,7 +17,10 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500,  "서버 개발자 잘못입니다.."),
     COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다.."),
     DUPLICATE_LIKE(400, "좋아요 누른 게시글입니다.."),
-    UNAUTHORIZED(403, "권한이 없습니다..");
+    UNAUTHORIZED(403, "권한이 없습니다.."),
+    NULL_LIKE(400, "좋아요 누르지 않은 게시글입니다.."),
+    DUPLICATE_LIKE_COMMENT(400, "좋아요 누른 댓글입니다.."),
+    NULL_LIKE_COMMENT(400, "좋아요 누르지 않은 게시글입니다..");
 
     private final int status;
     private final String message;

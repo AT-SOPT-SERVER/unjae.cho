@@ -21,6 +21,13 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(e.getErrorCode()));
     }
 
+    @ExceptionHandler(MissingRequestHeaderException.class)   //userId 헤더에 없는 경우
+    public ResponseEntity<ErrorResponse> handleMissingRequestHeader(MissingRequestHeaderException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse(ErrorCode.NULL_HEADER_USERID));
+    }
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)  //존재하는 URL에 존재하지 않는 METHOD
     public ResponseEntity<ErrorResponse> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         return ResponseEntity
