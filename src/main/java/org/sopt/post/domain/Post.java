@@ -1,11 +1,20 @@
 package org.sopt.post.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import org.sopt.comment.domain.Comment;
+import org.sopt.like.domain.PostLike;
 import org.sopt.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
-import java.time.LocalDateTime;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,53 +25,45 @@ public class Post {
     private String title;
 
     @Column(nullable = false)
-    private String content;
+    private String contents;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PostLike> likes = new ArrayList<>();
+
+
+    @Column(nullable = true)
+    private String tags;
 
     protected Post() {}
 
-    public Post(String title, String content, User user) {
+    public Post(String title, String contents, User user) {
         this.title = title;
-        this.content = content;
+        this.contents = contents;
         this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public void setPost(
             String title,
-            String content
+            String contents
     ){
         this.title = title;
-        this.content = content;
+        this.contents = contents;
+    }
+    public Post(String title, String contents, User user, String tag) {
+        this.title = title;
+        this.contents = contents;
+        this.user = user;
+        this.tags = tag;
     }
 }

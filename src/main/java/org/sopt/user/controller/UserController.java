@@ -1,5 +1,6 @@
 package org.sopt.user.controller;
 
+import org.sopt.auth.annotation.UserId;
 import org.sopt.global.dto.ApiResponse;
 import org.sopt.user.dto.UserRequestDto;
 import org.sopt.user.dto.UserResponseDto;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("api/users")
 public class UserController {
 
     private final UserService userService;
@@ -31,6 +32,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> getAllUsers(
+            @UserId final Long userId
     ) {
         List<UserResponseDto> users = userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.read(users));
@@ -38,6 +40,7 @@ public class UserController {
 
     @GetMapping("/{user-id}")
     public ResponseEntity<ApiResponse<UserResponseDto>> getUserById(
+            @UserId final Long userId,
             @PathVariable(name = "user-id") final Long id
     ) {
         UserResponseDto user = userService.getUserById(id);
@@ -46,9 +49,10 @@ public class UserController {
 
     @DeleteMapping("/{user-id}")
     public ResponseEntity<?> deleteUserById(
-            @PathVariable(name = "user-id") final Long id
+            @UserId final Long userId,
+            @PathVariable(name = "user-id") final Long targetId
     ) {
-        userService.deleteUser(id);
+        userService.deleteUser(userId, targetId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.delete());
     }
 }

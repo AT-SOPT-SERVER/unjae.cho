@@ -1,10 +1,15 @@
 package org.sopt.global.exception;
 
+import org.sopt.global.dto.ApiResponse;
 import org.sopt.global.dto.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,12 +28,11 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ErrorCode.NULL_HEADER_USERID));
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)    //잘못된 데이터타입
-    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST);
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)  //존재하는 URL에 존재하지 않는 METHOD
+    public ResponseEntity<ErrorResponse> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         return ResponseEntity
-                .status(ErrorCode.BAD_REQUEST.getStatus())  // 400 상태 코드
-                .body(errorResponse);
+                .badRequest()
+                .body(new ErrorResponse(ErrorCode.METHOD_NOT_ALLOWED_ERROR));
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,7 +1,7 @@
 package org.sopt.post.utils;
 
-import org.sopt.post.exception.InvalidContentException;
-import org.sopt.post.exception.InvalidTitleException;
+import org.sopt.global.exception.custom.InvalidContentException;
+import org.sopt.global.exception.custom.InvalidTitleException;
 
 public class PostValidator {
 
