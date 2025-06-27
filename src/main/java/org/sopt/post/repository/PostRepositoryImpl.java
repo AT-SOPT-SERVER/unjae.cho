@@ -35,6 +35,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         if (author != null && !author.isEmpty()) {
             builder.and(post.user.name.eq(author));
         }
+
         if (tag != null && !tag.isEmpty()) {
             builder.and(post.tags.eq(tag));
         }
